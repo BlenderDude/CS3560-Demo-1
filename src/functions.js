@@ -5,7 +5,7 @@ function doubleCharacters(input) {
 
     const output = input
         .split("")
-        .map(character => character + +character)
+        .map(character => character + character)
         .join("");
 
     return output;
