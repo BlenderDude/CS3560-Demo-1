@@ -1,0 +1,35 @@
+kind: Service
+apiVersion: v1
+metadata:
+    name: cs-oit-demo-1-service
+spec:
+    selector:
+        app: cs-oit-demo-1
+    type: NodePort
+    ports:
+        - protocol: TCP
+          port: 3000
+          targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: cs-oit-demo-1
+    namespace: default
+    labels:
+        app: cs-oit-demo-1
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: cs-oit-demo-1
+    template:
+        metadata:
+            labels:
+                app: cs-oit-demo-1
+        spec:
+            imagePullSecrets:
+                - name: pipeline-docker-registry
+            containers:
+                - name: cs-oit-demo-1
+                  image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}

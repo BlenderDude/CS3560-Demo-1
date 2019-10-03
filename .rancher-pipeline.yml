@@ -1,0 +1,22 @@
+stages:
+    - name: Build
+      when:
+          branch: master
+          event: [push, pull_request]
+      steps:
+          - runScriptConfig:
+                image: node:lts
+                shellScript: |-
+                    npm install
+    - name: Publish Image
+      steps:
+          - publishImageConfig:
+                dockerfilePath: ./Dockerfile
+                buildContext: .
+                tag: cs-oit-demo-1:${CICD_EXECUTION_SEQUENCE}
+            env:
+                PLUGIN_DEBUG: "true"
+    - name: Deploy
+      steps:
+          - applyYamlConfig:
+                path: ./deployment.yml
